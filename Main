@@ -1,0 +1,88 @@
+public class main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		game game1 = new game();
+		
+		Scanner input = new Scanner(System.in);
+    // creates all variables and intiates game board 
+		int inputColumn;
+		game1.intiateboard();
+		int validMove;
+		int end;
+		String player1;
+		String player2;
+    
+    //sets player 1 
+		System.out.println("Player one enter name: ");
+		player1 = input.nextLine();
+		game1.player1Set(player1);
+		
+    //sets player 2
+		System.out.println("Player two enter name: ");
+		player2 = input.nextLine();
+		game1.player2Set(player2);
+		
+		
+    // checks if player 1 whats to forfet
+		while(true){
+		System.out.println(player1 + " Do you want to forfet? Yes(1)-No(0)");
+		inputColumn = input.nextInt();
+		if(inputColumn ==1){
+			game1.intiateboard();
+			game1.player2Win();
+			game1.score();
+		}
+		
+    // player 1 turn, checks if user input is a valid and loops if it isnt
+        System.out.println(player1 + " pick a column");
+		inputColumn = input.nextInt();
+		validMove = game1.add(1, inputColumn);
+		while(validMove == 1){
+			System.out.println("Invalid Column");
+			 System.out.println("Player One pick a column");
+			 inputColumn = input.nextInt();
+		     validMove = game1.add(1, inputColumn);
+		}
+		end = game1.end;
+		if(end == 1){
+			break;
+		}
+		
+    // adds to turn count after turn is finished
+		game1.addTurn();
+		
+    // checks if player 2 whats to forfet
+		System.out.println(player2 + " Do you want to forfet? Yes(1)-No(0)");
+		inputColumn = input.nextInt();
+		if(inputColumn ==1){
+			game1.intiateboard();
+			game1.player1Win();
+			game1.score();
+
+		}
+    
+     // player 2 turn, checks if user input is a valid and loops if it isnt
+		System.out.println(player2 +" pick a column");
+		inputColumn = input.nextInt();
+		validMove = game1.add(2, inputColumn);
+		while(validMove == 1){
+			System.out.println("Invalid Column");
+			 System.out.println(player1 +" pick a column");
+			 inputColumn = input.nextInt();
+		     validMove = game1.add(1, inputColumn);
+		}
+		end = game1.end;
+		if(end == 1){
+			break;
+		}
+		}
+    // adds turn
+		game1.addTurn();
+        
+
+
+	}
+	
+
+}

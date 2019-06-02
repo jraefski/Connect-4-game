@@ -1,0 +1,593 @@
+package connectfour;
+
+import java.util.Scanner;
+
+public class game {
+	public int board[][]= new int[6][7];
+	
+	//------------------------------keeps track of lowest open space of each row-----------------------------------------
+	public int low1 = 5;
+	public int low2 = 5;
+	public int low3 = 5;
+	public int low4 = 5;
+	public int low5 = 5;
+	public int low6 = 5;
+	public int low7 = 5;
+	
+	//players
+	public String player1;
+	public String player2;
+	public int turns;
+	
+	//score board
+	public String lastWinner;
+	public String lastloser;
+	public int player1Score;
+	public int player2Score;
+	public int turnsWin;
+	
+	public int end = 0;
+	
+	public void addTurn(){
+		turns++;
+	}
+	
+	
+	//------------------------------------------set player names----------------------------------
+	public String getplayer1(){
+		return player1;
+	}
+	
+	public String getplayer2(){
+		return player2;
+	}
+	
+	//--------------------------------------------Set Name-------------------------------------------------
+	public void player1Set(String name){
+		player1 = name;
+	}
+	public void player2Set(String name){
+		player2 = name;
+	}
+	
+	//----------------------------------------display score--------------------------------------------
+	public void score(){
+		System.out.println("Scores: " + player1+ ": " + player1Score + " -- " + player2 + ": " + player2Score );
+		//System.out.println(lastWinner + " beat " + lastloser + " in " + turnsWin);
+	}
+	
+	public void player1Win(){
+		player1Score++;
+	}
+	public void player2Win(){
+		player2Score++;
+	}
+	
+	
+	public void intiateboard(){
+		int i,j;
+		for(i=0;i<6;i++) {
+            for(j=0;j<7;j++) {
+                board[i][j] = 0;     
+            }
+        }
+        
+		 low1 = 5;
+		 low2 = 5;
+		 low3 = 5;
+		 low4 = 5;
+		 low5 = 5;
+		 low6 = 5;
+		 low7 = 5;
+		 
+		 turns = 0;
+		 
+		 printboard();
+	}
+  
+  // ends game
+	public int endgame(){
+		return end;
+	}
+	
+	
+	
+	
+	//---------------------------------------------------------Adds to board----------------------------
+	public int add(int player, int col){
+		int temp = col-1;
+		
+		//-------------------------checks if value entered is within the board---------------------------
+		if(col > 7 || col < 1){
+			System.out.println("Invalid Column");
+			return 1;
+		}
+		
+		//-------------------------------------adds to each column and lowers the total space counter for that column-----------------------------------
+		if(col  == 1 && low1 > -1){
+			board[low1][col-1] = player;
+			printboard();
+			checkWin(low1, temp, player);
+			low1 --;
+			return 0;
+		}else if (col == 1 && (board[0][0] == 1 || board[0][0] == 2)){
+			System.out.println("Column Full");
+			return 1;
+		}
+		
+		if(col  == 2 && low2 > -1){
+			board[low2][col-1] = player;
+			printboard();
+			checkWin(low2, temp, player);
+			low2 --;
+			
+			return 0;
+		}else if (col == 2 && (board[0][0] == 1 || board[0][0] == 2)){
+			System.out.println("Column Full");
+			return 1;
+		}
+		
+		if(col  == 3 && low3 > -1){
+			board[low3][col-1] = player;
+			printboard();
+			checkWin(low3, temp, player);
+			low3 --;
+			return 0;
+		}else if (col == 3 && (board[0][0] == 1 || board[0][0] == 2)){
+			System.out.println("Column Full");
+			return 1;
+		}
+		 
+		
+		 if(col  == 4 && low4 > -1){
+				board[low4][col-1] = player;
+				printboard();
+				checkWin(low4, temp, player);
+				low4 --;
+				return 0;
+			}else if (col == 4 && (board[0][0] == 1 || board[0][0] == 2)){
+				System.out.println("Column Full");
+				return 1;
+			}
+		 
+		 if(col  == 5 && low5 > -1){
+				board[low5][col-1] = player;
+				printboard();
+				checkWin(low5, temp, player);
+				low5 --;
+				return 0;
+			}else if (col == 5 && (board[0][0] == 1 || board[0][0] == 2)){
+				System.out.println("Column Full");
+				return 1;
+			}
+		 
+		 if(col  == 6 && low6 > -1){
+				board[low6][col-1] = player;
+				printboard();
+				checkWin(low6, temp, player);
+				low6 --;
+				return 0;
+			}else if (col == 6 && (board[0][0] == 1 || board[0][0] == 2)){
+				System.out.println("Column Full");
+				return 1;
+			}
+		
+		 if(col  == 7 && low7 > -1){
+				board[low7][col-1] = player;
+				printboard();
+				checkWin(low7, temp, player);
+				low7 --;
+				return 0;
+			}else if (col == 7 && (board[0][0] == 1 || board[0][0] == 2)){
+				System.out.println("Column Full");
+				return 1;
+			}
+		 return 0;
+	}
+	
+	
+	
+	//--------------------------------------------------------------print the board and number row-----------------------------------------------------
+	public void printboard(){
+		System.out.println(" ");
+		System.out.println("-----------------------------------");
+		System.out.println("| 1 || 2 || 3 || 4 || 5 || 6 || 7 |");
+		System.out.println("----------------------------------");
+		
+		int i,j;
+		for(i=0;i<6;i++) {
+            for(j=0;j<7;j++) {
+                System.out.print("| " + board[i][j] + " |");   
+            }
+            System.out.println("\t");
+        }
+    }
+		
+	// checks for all possible win conditions
+	public void checkWin(int row, int column, int player){
+		int win = 0;
+		Scanner input = new Scanner(System.in);
+		int newgame;
+		
+		//---------------------------------------------checks vertical win for player 1------------------------------------------------------
+		while(true && player == 1){
+			if(row>4){
+				break;
+			}
+			
+			if(board[row][column] == board[row+1 ][column]){
+				win++;
+				row++;
+				if(win == 3){
+					System.out.println( player1 +" Wins!");
+					System.out.println("Start new game? Yes(1)-No(0)");
+					player1Win();
+					score();
+					lastWinner = player1;
+					lastloser = player2;
+					turnsWin = turns;
+					newgame = input.nextInt();
+					if(newgame == 1){
+						intiateboard();
+					}else{
+						end = 1;
+					}
+					break;
+				}
+			}else{
+				break;
+			}
+		
+		}
+		
+		//---------------------------------------------------------------checks vertical win for player2----------------------------------------------------------
+		while(true && player == 2){
+			if(row>4){
+				break;
+			}
+			
+			if(board[row][column] == board[row+1 ][column]){
+				win++;
+				row++;
+				if(win == 3){
+					System.out.println( player2 +" Wins!");
+					player2Win();
+					score();
+					lastWinner = player2;
+					lastloser = player1;
+					turnsWin = turns;
+					System.out.println("Start new game? Yes(1)-No(0)");
+					newgame = input.nextInt();
+					if(newgame == 1){
+						intiateboard();
+					}else{
+						end = 1;
+					}
+					break;
+					
+				}
+			}else{
+				break;
+			}
+		
+		}
+		//----------------------------------------------------------------------------horizontal check for player 1---------------------------------------------------------------
+		win = 0;
+		int tempRow = 5;
+		int i;
+		for (i=0;i<7;i++){
+						
+			if(tempRow < 0){
+				break;
+			}
+		    
+			if (board[tempRow][i] == 1){
+				
+		        win++;
+		    }else{
+		        win=0;
+		       
+		    }
+
+		    if (win==4){
+		    	System.out.println( player1 +" Wins!");
+		    	player1Win();
+				score();
+				lastWinner = player1;
+				lastloser = player2;
+				turnsWin = turns;
+		    	System.out.println("Start new game? Yes(1)-No(0)");
+				newgame = input.nextInt();
+				if(newgame == 1){
+					intiateboard();
+				}else{
+					end = 1;
+				}
+				break;
+		    }
+		    if(i>=6){
+		    	tempRow--;
+		    	i=-1;
+		    }
+		}
+		
+		//---------------------------------------------------------------------horizontal check for player 2---------------------------------------------------------------
+		win = 0;
+		tempRow = 5;
+		for (i=0;i<7;i++){
+						
+			if(tempRow < 0){
+				break;
+			}
+		    
+			if (board[tempRow][i] == 2){
+				
+		        win++;
+		    }else{
+		        win=0;
+		       
+		    }
+
+		    if (win==4){
+		    	System.out.println( player2 +" Wins!");
+		    	player2Win();
+				score();
+				lastWinner = player2;
+				lastloser = player1;
+				turnsWin = turns;
+		    	System.out.println("Start new game? Yes(1)-No(0)");
+				newgame = input.nextInt();
+				if(newgame == 1){
+					intiateboard();
+				}else{
+					end = 1;
+				}
+				break;
+		    }
+		    if(i>=6){
+		    	tempRow--;
+		    	i=-1;
+		    }
+		}
+		
+		win = 0;
+		int temp = 0;
+		
+		int x =0;
+		int y =0;
+		
+		//--------------------------------------------------------------diagonal up check for player 1------------------------------------------------------------------
+		for (i=5;i>0;i--){
+			
+			if(temp > 5){
+				break;
+			}
+			if(board[i][temp] == board[i-1][temp+1] && i > 2 && board[i][temp] == 1 && temp<=3 && i >=3){
+				win++;
+				x = i-1;
+				y = temp+1;
+				if(board[x][y] == board[x-1][y+1] && board[x][y] == 1){
+					win++;
+					x = x-1;
+					y = y+1;
+					
+					if(board[x][y] == board[x-1][y+1] && board[x][y] == 1){
+						win++;
+						x = x-1;
+						y = y+1;
+						
+						
+					}
+				}
+			}
+			
+			
+			if(win == 3){
+				System.out.println( player1 +" Wins!");
+				player1Win();
+				score();
+				lastWinner = player1;
+				lastloser = player2;
+				turnsWin = turns;
+				System.out.println("Start new game? Yes(1)-No(0)");
+				newgame = input.nextInt();
+				if(newgame == 1){
+					intiateboard();
+				}else{
+					end = 1;
+				}
+				break;
+				
+			}else{
+				win = 0;
+			}
+			if(i <= 1){
+				i = 6;
+				temp++;
+			}
+			
+		}
+		
+		win = 0;
+		temp = 0;
+		
+		x =0;
+		y =0;
+		
+		//--------------------------------------Diagonal up check for player 2----------------------------------------------------------------
+		for (i=5;i>0;i--){
+			
+		
+			if(temp > 5){
+				break;
+			}
+			if(board[i][temp] == board[i-1][temp+1] && i > 2 && board[i][temp] == 2 && temp <= 3 && i >=3){
+				win++;
+				x = i-1;
+				y = temp+1;
+				if(board[x][y] == board[x-1][y+1] && board[x][y] == 2){
+					win++;
+					x = x-1;
+					y = y+1;
+					
+					if(board[x][y] == board[x-1][y+1] && board[x][y] == 2){
+						win++;
+						x = x-1;
+						y = y+1;
+						
+						
+					}
+				}
+			}
+			
+			
+			if(win == 3){
+				System.out.println( player2 +" Wins!");
+				player2Win();
+				score();
+				lastWinner = player2;
+				lastloser = player1;
+				turnsWin = turns;
+				System.out.println("Start new game? Yes(1)-No(0)");
+				newgame = input.nextInt();
+				if(newgame == 1){
+					intiateboard();
+				}else{
+					end = 1;
+				}
+				break;
+			}else{
+				win = 0;
+			}
+			if(i <= 1){
+				i = 6;
+				temp++;
+			}
+			
+		}
+		
+		win = 0;
+		temp = 0;
+		
+		x =0;
+		y =0;
+		
+		//----------------------------------------------------diagonal down check for player 1---------------------------------------------------------------------
+		for (i=0;i<5;i++){
+			
+			if(temp > 5){
+				break;
+			}
+			if(board[i][temp] == board[i+1][temp+1] && i < 4 && board[i][temp] == 1 && temp <=3 && i <=2){
+				win++;
+				x = i+1;
+				y = temp+1;
+				if(board[x][y] == board[x+1][y+1] && board[x][y] == 1){
+					win++;
+					x = x+1;
+					y = y+1;
+					
+					if(board[x][y] == board[x+1][y+1] && board[x][y] == 1 ){
+						win++;
+						x = x+1;
+						y = y+1;
+						
+						
+					}
+				}
+			}
+			
+			
+			if(win == 3){
+				System.out.println( player1 +" Wins!");
+				player1Win();
+				score();
+				lastWinner = player1;
+				lastloser = player2;
+				turnsWin = turns;
+				System.out.println("Start new game? Yes(1)-No(0)");
+				newgame = input.nextInt();
+				if(newgame == 1){
+					intiateboard();
+				}else{
+					end =1;
+				}
+				
+				break;
+			}else{
+				win = 0;
+			}
+			if(i >= 4){
+				i = -1;
+				temp++;
+			}
+			
+		}
+		
+		//----------------------------------------------------diagonal down check for player 2---------------------------------------------------------------------
+		win = 0;
+		temp = 0;
+		
+		x =0;
+		y =0;
+				for (i=0;i<5;i++){
+					
+					if(temp > 5){
+						break;
+					}
+					if(board[i][temp] == board[i+1][temp+1] && i < 4 && board[i][temp] == 2 && temp <=3 && i <=2){
+						win++;
+						x = i+1;
+						y = temp+1;
+						if(board[x][y] == board[x+1][y+1] && board[x][y] == 2){
+							win++;
+							x = x+1;
+							y = y+1;
+							
+							if(board[x][y] == board[x+1][y+1] && board[x][y] == 2){
+								win++;
+								x = x+1;
+								y = y+1;
+								
+								
+							}
+						}
+					}
+					
+					
+					if(win == 3){
+						System.out.println( player2 +" Wins!");
+						player2Win();
+						score();
+						lastWinner = player2;
+						lastloser = player1;
+						turnsWin = turns;
+						System.out.println("Start new game? Yes(1)-No(0)");
+						newgame = input.nextInt();
+						if(newgame == 1){
+							intiateboard();
+						}else{
+							end =1;
+						}
+						
+						break;
+					}else{
+						win = 0;
+					}
+					if(i >= 4){
+						i = -1;
+						temp++;
+					}
+					
+				}
+				
+		
+		
+	}
+
+}
+
+	}
+	
+
+}
